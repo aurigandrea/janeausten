@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>In the footsteps of Jane Austen</title>
+         <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+         <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+     crossorigin=""></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+
+        <style>
+        #map{ height: 600px; }
+
+</style>
+               <script>
+  // When the user scrolls the page, execute myFunction
+window.onscroll = function() {myFunction()};
+
+// Get the header
+var header = document.getElementById("myHeader");
+
+// Get the offset position of the navbar
+var sticky = header.offsetTop;
+
+// Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction() {
+  if (window.pageYOffset > sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
+}
+
+// Prevents window from moving on touch on older browsers.
+window.addEventListener('touchmove', function (event) {
+  event.preventDefault()
+}, false)
+
+// Allows content to move on touch.
+document.querySelector('.body-container').addEventListener('touchmove', function (event) {
+  event.stopPropagation()
+}, false)
+
+  //geolocation code
+  const options = {
+    enableHighAccuracy: true,
+    // Get high accuracy reading, if available (default false)
+    timeout: 5000,
+    // Time to return a position successfully before error (default infinity)
+    maximumAge: 2000,
+    // Milliseconds for which it is acceptable to use cached position (default 0)
+};
+
+navigator.geolocation.watchPosition(success, error, options);
+// Fires success function immediately and when user position changes
+
+function success(pos) {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    const accuracy = pos.coords.accuracy; // Accuracy in metres
+}
+
+function error(err) {
+    if (err.code === 1) {
+        alert("Please allow geolocation access");
+        // Runs if user refuses access
+    } else {
+        alert("Cannot get current location");
+        // Runs if there was a technical problem.
+    }
+}
+</script>
+           <header>
+      <div class='header_container'>
+      <div class="header" id="myHeader">
+      <h1>In the footsteps of Jane Austen</h1>
+     </div>
+    </header>
+    </head>
+
+        <body>
+            <div>
+            <!--<h1>The history of Black London around me</h1>-->
+            <h3>Discover locations linked to Jane Austen in Southampton</h3>
+            <p> Please, enable access to your location and let the app search for places of interest near you. <span class="hover-underline-animation"> Find help <a href="support.html">here.</a></span></p>
+        </div>
+
+
+            <div id="map"></div>
+            <br>
+            <br>
+
+        <script>
+        
+        var map = L.map('map').setView([50.902979, -1.40928,15], 16);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+        // Sets map data source and associates with map
+
+let marker, circle, zoomed;
+
+navigator.geolocation.watchPosition(success, error);
+
+function success(pos) {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    const accuracy = pos.coords.accuracy;
+
+    if (marker) {
+        map.removeLayer(marker);
+        map.removeLayer(circle);
+    }
+    // Removes any existing marker and circule (new ones about to be set)
+
+    marker = L.marker([lat, lng]).addTo(map);
+    circle = L.circle([lat, lng], { radius: accuracy }).addTo(map);
+    // Adds marker to the map and a circle for accuracy
+
+    if (!zoomed) {
+        zoomed = map.fitBounds(circle.getBounds());
+    }
+    // Set zoom to boundaries of accuracy circle
+
+    map.setView([lat, lng]);
+    // Set map focus to current user position
+
+}
+
+function error(err) {
+
+    if (err.code === 1) {
+        alert("Please allow geolocation access");
+    } else {
+        alert("Cannot get current location");
+    }
+
+}
+
+// Define an array. 
+
+var points = [
+                        {
+                        "info": "1. The Bargate. The plaque here reminds us of Jane's first visit to Southampton as a schoolgirl, aged seven, with her sister and cousin",
+                        "lat": 50.9026683, 
+                        "lon": -1.4089418,
+                        },
+                        {
+                        "info": "2. All Saints Church is down the High Street on the left at the corner of East Street. Because of wartime bombs and incendiaries, only a plaque marks the site of a very beautiful Georgian church where Jane worshipped",
+                        "lat": 50.90182, 
+                        "lon": -1.40409,
+                        },
+                        
+                        {
+                        "info": "3. The Spa Gardens site, Arundel Circus, is where the spa fountain and botanical gardens were located. The spa water was said to cure everything except a broken heart. Jane and her family walked here almost daily. The gardens overlooked the tidal River Test. Walk down the steps and follow the Town Walls from Arundel Tower, past Catchcold Tower, and climb the forty steps to Forest View, a narrow street perched above the ramparts.",
+                        "lat": 50.9026527,
+                        "lon": -1.4822443, 
+                                                }, 
+                        {
+                        "info": "4. Jane Austen's House, No 2 Castle Square, was where The Juniper Berry pub now stands. She lived here from early 1807 until April 1809. The square in front of the pub is roughly the same shape and size as it was in Jane Austen's time. The tall block of flats is where the Marquis of Lansdowne built his mock gothic castle.",
+                        "lat": 50.9011413, 
+                        "lon": -1.41072,
+                        },
+                        {
+                        "info": "5.The Long Rooms and Hot Baths were built in 1767 by John Martin.Dances were held here on four nights a week. The Lance family invited the Austens to the Long Rooms in January 1807, shortly after they had moved into their new home in Castle Square.",
+                        "lat": 50.9002896, 
+                        "lon": -1.4070839,
+                        },
+                        {
+                        "info": "6. Theatre Royal, just past the Mediaeval Merchant's House. Jane Austen and her family visited this theatre on 14 September 1807 to see two plays starring the comedian, John Bannister.",
+                        "lat": 50.8982,
+                        "lon": -1.715061, 
+                        },
+                         {
+                           "info": "7. The Water Gate. Water Gate quay was where Jane Austen and her famil set off to Hythe by boat on Tuesday, 15 September 1807. They took afternoon tea with Mrs and Miss Palmer, who were staying at Hythe. The crossing must have been calm, because 'Mama was not at all sick' wrote Fanny Knight (Jane's niece) in her diary. ",
+                           "lat": 50.8967305,
+                           "lon": -1.4066919,
+                         },
+                         {
+                           "info": "8. The Platform, commonly known as The Beach. It was a promenade which curved round to Cross House Quay and was a popular tree-lined walk for all Southampton people, including the Austens. In the winter of 1807, Frank, Jane's brother, found the meadow land (now Queen's Park) sufficiently frozen to try out his skills as an ice-skater.",
+                           "lat": 50.8963317,
+                           "lon": -1.4057146
+                         },
+                         {
+                            "info": "9. The Dolphin Hotel on the right. It is said that Jane Austen's brother, Frank, took her to a dance at the Dolphin Hotel to celebrate her eighteenth birthday in December 1793. Her letters confirm two other dances she attended there in the winter of 1808-09. At last, you can enter a building which Jane actually visited! The ballroom, with its magnificent bay windows, is on the first floor.",
+                            "lat": 50.9001299,
+                            "lon": -1.4038689, 
+                            },
+                        
+                        ];
+        
+for (var i in points) {
+    var latlng = L.latLng({ lat: points[i].lat, lng: points[i].lon });
+    L.marker( latlng ).addTo(map).bindPopup(points[i].info);
+}      
+
+        </script>
+
+</div>
+    </body>
+    <footer>
+      <p> This prototype webapp was designed for the University of Southampton by Dr Andrea Kocsis. Code is MIT licence. Content ©City of Southampton Society<p>
+    </footer>
+</html>
